@@ -1,0 +1,520 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>My Cart | Gujarat Vidyapith Canteen</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #fbf7f0;
+            color: #4a2b1c;
+        }
+
+        .navbar {
+            background: #4a2818;
+            color: white;
+            padding: 16px 6%;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 52px;
+            height: 52px;
+
+            border: 2px solid #e6c98d;
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: #e6c98d;
+            font-weight: bold;
+        }
+
+        .brand h2 {
+            font-family: Georgia, serif;
+            font-size: 21px;
+        }
+
+        .brand span {
+            color: #e5c78d;
+            font-size: 13px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 28px;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            color: #e6c98d;
+        }
+
+        .hero {
+            background: #56321f;
+            color: white;
+
+            text-align: center;
+
+            padding: 55px 20px;
+        }
+
+        .hero p {
+            color: #e6c98d;
+            font-family: Georgia, serif;
+            font-size: 22px;
+            font-style: italic;
+        }
+
+        .hero h1 {
+            font-family: Georgia, serif;
+            font-size: 46px;
+            margin-top: 10px;
+        }
+
+        .cart-section {
+            width: 88%;
+            max-width: 1000px;
+
+            margin: 50px auto;
+        }
+
+        .cart-box {
+            background: white;
+
+            border: 1px solid #e4d8ca;
+
+            border-radius: 16px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 8px 25px rgba(70,40,20,0.08);
+        }
+
+        .cart-header {
+            background: #eee0cc;
+
+            display: grid;
+
+            grid-template-columns:
+                2fr 1fr 1fr 1fr 0.6fr;
+
+            padding: 16px;
+
+            font-weight: bold;
+        }
+
+        .cart-row {
+            display: grid;
+
+            grid-template-columns:
+                2fr 1fr 1fr 1fr 0.6fr;
+
+            align-items: center;
+
+            padding: 20px 16px;
+
+            border-top: 1px solid #eee5dc;
+        }
+
+        .food-name {
+            font-weight: bold;
+        }
+
+        .price {
+            color: #a55d24;
+            font-weight: bold;
+        }
+
+        .quantity {
+            background: #f1e5d8;
+
+            padding: 6px 12px;
+
+            border-radius: 20px;
+
+            width: fit-content;
+        }
+
+        .remove-btn {
+            color: #c53a2e;
+
+            text-decoration: none;
+
+            font-size: 14px;
+        }
+
+        .cart-footer {
+            padding: 25px;
+
+            background: #faf5ed;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+        .total-title {
+            color: #6b594d;
+            font-size: 14px;
+        }
+
+        .grand-total {
+            font-size: 30px;
+
+            font-weight: bold;
+
+            color: #4a2818;
+
+            margin-top: 5px;
+        }
+
+        .checkout-btn {
+            background: #743a1d;
+
+            color: white;
+
+            text-decoration: none;
+
+            padding: 13px 25px;
+
+            border-radius: 25px;
+
+            font-weight: bold;
+        }
+
+        .checkout-btn:hover {
+            background: #562914;
+        }
+
+        .empty-cart {
+            background: white;
+
+            text-align: center;
+
+            padding: 70px 20px;
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 8px 25px rgba(70,40,20,0.08);
+        }
+
+        .empty-cart-icon {
+            font-size: 65px;
+            margin-bottom: 15px;
+        }
+
+        .empty-cart h2 {
+            font-family: Georgia, serif;
+            margin-bottom: 10px;
+        }
+
+        .empty-cart p {
+            color: #756458;
+            margin-bottom: 25px;
+        }
+
+        .menu-btn {
+            display: inline-block;
+
+            background: #743a1d;
+
+            color: white;
+
+            text-decoration: none;
+
+            padding: 12px 25px;
+
+            border-radius: 25px;
+
+            font-weight: bold;
+        }
+
+        footer {
+            background: #3f2417;
+
+            color: white;
+
+            text-align: center;
+
+            padding: 30px 20px;
+        }
+
+        footer h3 {
+            font-family: Georgia, serif;
+            margin-bottom: 5px;
+        }
+
+        footer p {
+            color: #cdbcae;
+            font-size: 13px;
+        }
+
+        .quote {
+            color: #e6c98d;
+            margin: 15px 0;
+            font-family: Georgia, serif;
+            font-style: italic;
+        }
+
+        @media (max-width: 750px) {
+
+            .navbar {
+                flex-direction: column;
+                gap: 18px;
+            }
+
+            .cart-header,
+            .cart-row {
+                grid-template-columns:
+                    1.5fr 1fr 1fr 1fr;
+            }
+
+            .remove-column {
+                display: none;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <header class="navbar">
+
+        <div class="brand">
+
+            <div class="logo">
+                GV
+            </div>
+
+            <div>
+
+                <h2>Gujarat Vidyapith</h2>
+
+                <span>Canteen</span>
+
+            </div>
+
+        </div>
+
+
+        <nav class="nav">
+
+            <a href="/">Home</a>
+
+            <a href="{% url 'menu' %}">
+                Menu
+            </a>
+
+            <a href="{% url 'about' %}">
+                About
+            </a>
+
+            <a href="{% url 'contact' %}">
+                Contact
+            </a>
+
+            <a href="{% url 'cart' %}" class="active">
+                🛒 Cart
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <p>Your Selected Food</p>
+
+        <h1>My Cart</h1>
+
+    </section>
+
+
+    <!-- CART -->
+
+    <section class="cart-section">
+
+        {% if cart_items %}
+
+            <div class="cart-box">
+
+                <div class="cart-header">
+
+                    <div>Item</div>
+                    <div>Price</div>
+                    <div>Quantity</div>
+                    <div>Total</div>
+                    <div class="remove-column">Action</div>
+
+                </div>
+
+
+                {% for cart_item in cart_items %}
+
+                    <div class="cart-row">
+
+                        <div class="food-name">
+                            {{ cart_item.item.name }}
+                        </div>
+
+
+                        <div class="price">
+                            ₹{{ cart_item.item.price }}
+                        </div>
+
+
+                        <div>
+
+                            <span class="quantity">
+                                {{ cart_item.quantity }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="price">
+                            ₹{{ cart_item.total }}
+                        </div>
+
+
+                        <div class="remove-column">
+
+                            <a
+                                href="{% url 'remove_from_cart' cart_item.item.id %}"
+                                class="remove-btn"
+                            >
+                                Remove
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+
+                <div class="cart-footer">
+
+                    <div>
+
+                        <div class="total-title">
+                            Total Amount
+                        </div>
+
+                        <div class="grand-total">
+                            ₹{{ grand_total }}
+                        </div>
+
+                    </div>
+
+
+                    <a href="#" class="checkout-btn">
+                        Proceed to Checkout →
+                    </a>
+
+                </div>
+
+            </div>
+
+
+        {% else %}
+
+
+            <div class="empty-cart">
+
+                <div class="empty-cart-icon">
+                    🛒
+                </div>
+
+                <h2>
+                    Your Cart is Empty
+                </h2>
+
+                <p>
+                    Choose your favourite food from our menu.
+                </p>
+
+                <a href="{% url 'menu' %}" class="menu-btn">
+                    Explore Menu →
+                </a>
+
+            </div>
+
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <h3>
+            Gujarat Vidyapith Canteen
+        </h3>
+
+        <p>
+            Gujarat Vidyapith, Ahmedabad
+        </p>
+
+        <div class="quote">
+            “સાદું ભોજન • સારી સેવા”
+        </div>
+
+        <p>
+            © 2026 Gujarat Vidyapith Canteen.
+            All Rights Reserved.
+        </p>
+
+    </footer>
+
+</body>
+
+</html>

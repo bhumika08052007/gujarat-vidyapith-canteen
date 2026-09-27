@@ -1,0 +1,657 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Menu | Gujarat Vidyapith Canteen</title>
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #fbf7f0;
+            color: #4a2b1c;
+        }
+
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            background: #4a2818;
+            color: white;
+
+            padding: 16px 6%;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+
+        .logo {
+            width: 52px;
+            height: 52px;
+
+            border: 2px solid #e6c98d;
+
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: #e6c98d;
+
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+
+        .brand h2 {
+            font-family: Georgia, serif;
+            font-size: 21px;
+        }
+
+
+        .brand span {
+            color: #e5c78d;
+            font-size: 13px;
+        }
+
+
+        .nav {
+            display: flex;
+            gap: 28px;
+        }
+
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+
+        .nav a:hover,
+        .nav a.active {
+            color: #e6c98d;
+        }
+
+
+        /* ================= HERO ================= */
+
+        .menu-hero {
+            background:
+                linear-gradient(
+                    rgba(73,39,23,0.92),
+                    rgba(73,39,23,0.92)
+                );
+
+            color: white;
+
+            text-align: center;
+
+            padding: 65px 20px;
+        }
+
+
+        .menu-hero p {
+            color: #e6c98d;
+
+            font-family: Georgia, serif;
+
+            font-size: 23px;
+
+            font-style: italic;
+        }
+
+
+        .menu-hero h1 {
+            font-family: Georgia, serif;
+
+            font-size: 50px;
+
+            margin: 10px 0;
+        }
+
+
+        .menu-hero h3 {
+            color: #eadbc7;
+
+            font-weight: normal;
+        }
+
+
+        /* ================= MENU ================= */
+
+        .menu-section {
+            padding: 65px 6%;
+        }
+
+
+        .section-title {
+            text-align: center;
+
+            font-family: Georgia, serif;
+
+            font-size: 38px;
+
+            color: #4c2b1c;
+
+            margin-bottom: 8px;
+        }
+
+
+        .section-subtitle {
+            text-align: center;
+
+            color: #756457;
+
+            margin-bottom: 35px;
+        }
+
+
+        .menu-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 22px;
+        }
+
+
+        .food-card {
+            background: white;
+
+            border: 1px solid #e5d9cd;
+
+            border-radius: 15px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 6px 18px rgba(70,40,20,0.08);
+
+            transition: 0.25s;
+        }
+
+
+        .food-card:hover {
+            transform: translateY(-5px);
+
+            box-shadow:
+                0 12px 26px rgba(70,40,20,0.14);
+        }
+
+
+        .food-image {
+            height: 135px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ead4b5,
+                    #f7e9d3
+                );
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 65px;
+        }
+
+
+        .food-content {
+            padding: 18px;
+        }
+
+
+        .food-content h3 {
+            color: #402719;
+
+            font-size: 17px;
+
+            line-height: 1.3;
+
+            min-height: 44px;
+
+            margin-bottom: 7px;
+        }
+
+
+        .price {
+            color: #a45d24;
+
+            font-size: 23px;
+
+            font-weight: bold;
+
+            margin-bottom: 9px;
+        }
+
+
+        .stock {
+            display: inline-block;
+
+            padding: 6px 10px;
+
+            border-radius: 15px;
+
+            font-size: 12px;
+
+            margin-bottom: 12px;
+        }
+
+
+        .available {
+            background: #ddf1df;
+
+            color: #20783a;
+        }
+
+
+        .unavailable {
+            background: #f8dddd;
+
+            color: #c52f2f;
+        }
+
+
+        .cart-btn {
+            width: 100%;
+
+            border: none;
+
+            padding: 11px;
+
+            border-radius: 8px;
+
+            background: #743a1d;
+
+            color: white;
+
+            font-size: 14px;
+
+            cursor: pointer;
+        }
+
+
+        .cart-btn:hover {
+            background: #582914;
+        }
+
+
+        .cart-btn.disabled {
+            background: #a4a4a4;
+
+            cursor: not-allowed;
+        }
+
+
+        .empty {
+            text-align: center;
+
+            grid-column: 1 / -1;
+
+            padding: 50px;
+
+            color: #756457;
+        }
+
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            background: #3f2417;
+
+            color: white;
+
+            text-align: center;
+
+            padding: 30px 20px;
+        }
+
+
+        footer h3 {
+            font-family: Georgia, serif;
+
+            margin-bottom: 6px;
+        }
+
+
+        footer p {
+            color: #cdbcae;
+
+            font-size: 13px;
+        }
+
+
+        .quote {
+            color: #e6c98d;
+
+            font-family: Georgia, serif;
+
+            font-style: italic;
+
+            margin: 15px 0;
+        }
+
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 1000px) {
+
+            .menu-grid {
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 750px) {
+
+            .navbar {
+                flex-direction: column;
+                gap: 18px;
+            }
+
+
+            .menu-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .nav {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .menu-hero h1 {
+                font-size: 36px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ================= NAVBAR ================= -->
+
+    <header class="navbar">
+
+        <div class="brand">
+
+            <div class="logo">
+                GV
+            </div>
+
+            <div>
+
+                <h2>Gujarat Vidyapith</h2>
+
+                <span>Canteen</span>
+
+            </div>
+
+        </div>
+
+
+        <nav class="nav">
+
+            <a href="/">
+                Home
+            </a>
+
+            <a href="{% url 'menu' %}" class="active">
+                Menu
+            </a>
+
+            <a href="{% url 'about' %}">
+                About
+            </a>
+
+            <a href="{% url 'contact' %}">
+                Contact
+            </a>
+
+            <a href="{% url 'cart' %}">
+                 🛒 Cart
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <!-- ================= HERO ================= -->
+
+    <section class="menu-hero">
+
+        <p>Gujarat Vidyapith Canteen</p>
+
+        <h1>Our Menu</h1>
+
+        <h3>
+            Fresh Food • Simple Prices • Happy Students
+        </h3>
+
+    </section>
+
+
+    <!-- ================= MENU ================= -->
+
+    <section class="menu-section">
+
+        <h2 class="section-title">
+            Today's Menu
+        </h2>
+
+        <p class="section-subtitle">
+            Choose your favourite food and place your order
+        </p>
+
+
+        <div class="menu-grid">
+
+            {% if menu_items %}
+
+                {% for item in menu_items %}
+
+                    <div class="food-card">
+
+
+                        <!-- FOOD ICON -->
+
+                        <div class="food-image">
+
+                            {% if "Tea" in item.name %}
+                                ☕
+
+                            {% elif "Coffee" in item.name %}
+                                ☕
+
+                            {% elif "Sandwich" in item.name %}
+                                🥪
+
+                            {% elif "Poha" in item.name %}
+                                🍚
+
+                            {% elif "Pakoda" in item.name %}
+                                🥘
+
+                            {% elif "Kachori" in item.name or "Samosa" in item.name %}
+                                🥟
+
+                            {% elif "Vada" in item.name %}
+                                🍔
+
+                            {% elif "Dabeli" in item.name %}
+                                🥪
+
+                            {% elif "Khaman" in item.name %}
+                                🍰
+
+                            {% elif "Thepla" in item.name %}
+                                🫓
+
+                            {% elif "Paratha" in item.name %}
+                                🫓
+
+                            {% elif "Jalebi" in item.name %}
+                                🍯
+
+                            {% elif "Dosa" in item.name %}
+                                🥞
+
+                            {% elif "Idli" in item.name %}
+                                🍘
+
+                            {% elif "Puri" in item.name %}
+                                🍛
+
+                            {% elif "Lassi" in item.name or "Chhas" in item.name %}
+                                🥛
+
+                            {% elif "Thali" in item.name %}
+                                🍱
+
+                            {% else %}
+                                🍽️
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- FOOD DETAILS -->
+
+                        <div class="food-content">
+
+                            <h3>
+                                {{ item.name }}
+                            </h3>
+
+
+                            <div class="price">
+                                ₹{{ item.price }}
+                            </div>
+
+
+                            {% if item.stock > 0 %}
+
+                                <div class="stock available">
+                                    ✓ {{ item.stock }} available
+                                </div>
+
+                                <form method="POST" action="{% url 'add_to_cart' item.id %}">
+                                         {% csrf_token %}
+
+                                    <button type="submit" class="cart-btn">
+                                                     🛒 Add to Cart
+                                    </button>
+                                </form>
+                            {% else %}
+
+                                <div class="stock unavailable">
+                                    ✕ Out of Stock
+                                </div>
+
+                                <button
+                                    class="cart-btn disabled"
+                                    disabled
+                                >
+                                    Out of Stock
+                                </button>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="empty">
+
+                    No food items available right now.
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <h3>
+            Gujarat Vidyapith Canteen
+        </h3>
+
+        <p>
+            Gujarat Vidyapith, Ahmedabad
+        </p>
+
+        <div class="quote">
+            “સાદું ભોજન • સારી સેવા”
+        </div>
+
+        <p>
+            © 2026 Gujarat Vidyapith Canteen.
+            All Rights Reserved.
+        </p>
+
+    </footer>
+
+
+</body>
+
+</html>

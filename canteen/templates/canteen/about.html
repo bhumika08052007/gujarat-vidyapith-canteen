@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Gujarat Vidyapith Canteen</title>
+    <link rel="stylesheet" href="{% static 'canteen/style.css' %}">
+</head>
+<body>
+    <header class="navbar">
+        <a class="brand" href="{% url 'home' %}" aria-label="Gujarat Vidyapith Canteen home">
+            <div class="brand-logo">GV</div>
+            <div>
+                <h2>Gujarat Vidyapith</h2>
+                <span>Canteen</span>
+            </div>
+        </a>
+        <nav class="nav-menu" aria-label="Main navigation">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'home' %}#menu">Menu</a>
+            <a href="{% url 'about' %}" class="active">About</a>
+            <a href="{% url 'home' %}#contact">Contact</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="about-hero">
+            <div class="about-hero-content">
+                <p>Made for campus life</p>
+                <h1>About Our Canteen</h1>
+                <h3>Fresh, wholesome food for the Gujarat Vidyapith community.</h3>
+                <p class="about-intro">A welcoming place to pause, recharge and share a meal between classes.</p>
+            </div>
+        </section>
+
+        <section class="about-main">
+            <div class="about-image-box">
+                <img src="{% static 'canteen/images/webpage.avif' %}" alt="Gujarat Vidyapith campus">
+            </div>
+            <div class="about-text">
+                <p class="section-small-title">OUR STORY</p>
+                <h2>Good food brings campus together.</h2>
+                <p>Gujarat Vidyapith Canteen serves students, faculty and staff with familiar, flavourful meals at student-friendly prices.</p>
+                <p>Whether it is a quick chai between lectures or a satisfying lunch with friends, we aim to make every visit easy, comfortable and delicious.</p>
+            </div>
+        </section>
+
+        <section class="background-section">
+            <div class="section-heading"><span class="decor-line"></span><h2>Rooted in Care</h2><span class="decor-line"></span></div>
+            <p class="background-text">Our kitchen focuses on simple, nourishing food prepared with care. We believe a campus canteen should feel dependable: fresh ingredients, clean preparation and warm service every day.</p>
+            <p class="background-text">From local favourites to everyday comfort food, our menu is planned around the needs and rhythms of campus life.</p>
+        </section>
+
+        <section class="mission-section">
+            <div class="section-heading"><span class="decor-line"></span><h2>What We Stand For</h2><span class="decor-line"></span></div>
+            <div class="mission-grid">
+                <article class="mission-card"><div class="mission-icon">🌿</div><h3>Fresh Ingredients</h3><p>Thoughtfully selected ingredients for food that feels good and tastes great.</p></article>
+                <article class="mission-card"><div class="mission-icon">✨</div><h3>Clean & Hygienic</h3><p>Careful preparation and a clean space for every member of our community.</p></article>
+                <article class="mission-card"><div class="mission-icon">🤝</div><h3>Campus First</h3><p>Friendly service, fair prices and food made for busy campus days.</p></article>
+            </div>
+        </section>
+
+        <section class="offer-section">
+            <div class="section-heading"><span class="decor-line"></span><h2>What We Offer</h2><span class="decor-line"></span></div>
+            <div class="offer-grid">
+                <article class="offer-card"><span>☕</span><h3>Hot Beverages</h3><p>Tea and coffee for a refreshing break.</p></article>
+                <article class="offer-card"><span>🥪</span><h3>Quick Bites</h3><p>Easy snacks when time is short.</p></article>
+                <article class="offer-card"><span>🍛</span><h3>Wholesome Meals</h3><p>Filling lunch options for your day.</p></article>
+                <article class="offer-card"><span>🥛</span><h3>Cool Drinks</h3><p>Refreshing favourites for every season.</p></article>
+            </div>
+        </section>
+
+        <section class="why-section">
+            <div class="why-content">
+                <p class="section-small-title">WHY CHOOSE US</p>
+                <h2>Made for a better campus break.</h2>
+            </div>
+            <div class="why-list">
+                <div class="why-item"><span>✓</span><p>Freshly prepared food</p></div>
+                <div class="why-item"><span>✓</span><p>Student-friendly prices</p></div>
+                <div class="why-item"><span>✓</span><p>Clean, welcoming space</p></div>
+                <div class="why-item"><span>✓</span><p>Quick campus service</p></div>
+            </div>
+        </section>
+
+        <section class="digital-section">
+            <div class="section-heading"><span class="decor-line"></span><h2>Easy Ordering</h2><span class="decor-line"></span></div>
+            <p class="digital-text">Finding your campus favourite should be simple. Explore the menu and choose what you would like before your break begins.</p>
+            <div class="digital-flow" aria-label="How ordering works">
+                <div class="flow-box"><span>1</span><strong>Explore the menu</strong></div>
+                <div class="flow-arrow" aria-hidden="true">→</div>
+                <div class="flow-box"><span>2</span><strong>Choose your food</strong></div>
+                <div class="flow-arrow" aria-hidden="true">→</div>
+                <div class="flow-box"><span>3</span><strong>Enjoy your break</strong></div>
+            </div>
+        </section>
+
+        <section class="about-cta">
+            <h2>Hungry already?</h2>
+            <p>See what is being served at the canteen today.</p>
+            <a href="{% url 'home' %}#menu">Explore Today's Menu →</a>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-brand">
+            <div class="footer-logo">GV</div>
+            <div><h3>Gujarat Vidyapith Canteen</h3><p>Gujarat Vidyapith, Ahmedabad</p></div>
+        </div>
+        <div class="footer-bottom">© 2026 Gujarat Vidyapith Canteen. All Rights Reserved.</div>
+    </footer>
+</body>
+</html>

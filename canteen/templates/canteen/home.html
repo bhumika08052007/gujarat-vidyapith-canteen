@@ -1,0 +1,395 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Gujarat Vidyapith Canteen</title>
+
+    <link rel="stylesheet" href="{% static 'canteen/style.css' %}">
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+
+    <header class="navbar">
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                GV
+            </div>
+
+            <div>
+                <h2>Gujarat Vidyapith</h2>
+                <span>Canteen</span>
+            </div>
+
+        </div>
+
+
+        <nav class="nav-menu">
+
+            <a href="/" class="active">Home</a>
+
+          <a href="{% url 'menu' %}">Menu</a>
+
+            <a href="{% url 'about' %}">About</a>
+            <a href="{% url 'contact' %}">Contact</a>
+            <a href="{% url 'cart' %}" class="cart-link">
+                🛒 Cart
+                <span class="cart-badge">0</span>
+            </a>
+        </nav>
+
+    </header>
+
+
+    <!-- ================= HERO ================= -->
+
+    <section class="hero">
+
+        <div class="hero-left">
+
+            <p class="welcome-text">
+                Welcome to
+            </p>
+
+            <h1>
+                Gujarat Vidyapith
+                <br>
+                Canteen
+            </h1>
+
+            <p class="hero-gujarati">
+                “વિદ્યાર્થીઓ માટે સ્વાદિષ્ટ અને તાજું ભોજન”
+            </p>
+
+
+            <div class="features">
+
+                <div class="feature">
+                    <div class="feature-icon">🍴</div>
+
+                    <div>
+                        <strong>Fresh Food</strong>
+                        <small>Hygienic & Healthy</small>
+                    </div>
+                </div>
+
+
+                <div class="feature">
+                    <div class="feature-icon">⏱</div>
+
+                    <div>
+                        <strong>Easy Ordering</strong>
+                        <small>Quick & Simple</small>
+                    </div>
+                </div>
+
+
+                <div class="feature">
+                    <div class="feature-icon">👨‍🎓</div>
+
+                    <div>
+                        <strong>For Students</strong>
+                        <small>Only on Campus</small>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <a href="#menu" class="view-menu-btn">
+                View Menu →
+            </a>
+
+        </div>
+
+
+        <div class="hero-right">
+
+            <div class="campus-box">
+                <img class="campus-photo"
+                     src="{% static 'canteen/images/webpage.avif' %}"
+                     alt="Gujarat Vidyapith campus">
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= MENU ================= -->
+
+    <section class="menu-section" id="menu">
+
+        <div class="section-heading">
+
+            <div class="heading-line"></div>
+
+            <h2>Today's Menu</h2>
+
+            <div class="heading-line"></div>
+
+        </div>
+
+
+        <p class="section-subtitle">
+            Choose your favourite food from our canteen
+        </p>
+
+
+        <div class="menu-grid">
+
+            {% if menu_items %}
+
+                {% for item in menu_items %}
+
+                    <div class="food-card">
+
+                        <div class="food-image">
+
+                            {% if "Tea" in item.name %}
+                                ☕
+                            {% elif "Coffee" in item.name %}
+                                ☕
+                            {% elif "Sandwich" in item.name %}
+                                🥪
+                            {% elif "Poha" in item.name %}
+                                🍚
+                            {% elif "Pakoda" in item.name %}
+                                🥘
+                            {% elif "Kachori" in item.name or "Samosa" in item.name %}
+                                🥟
+                            {% elif "Vada" in item.name %}
+                                🍔
+                            {% elif "Dabeli" in item.name %}
+                                🥪
+                            {% elif "Khaman" in item.name %}
+                                🍰
+                            {% elif "Thepla" in item.name %}
+                                🫓
+                            {% elif "Paratha" in item.name %}
+                                🫓
+                            {% elif "Jalebi" in item.name %}
+                                🍯
+                            {% elif "Dosa" in item.name %}
+                                🥞
+                            {% elif "Idli" in item.name %}
+                                🍘
+                            {% elif "Puri" in item.name %}
+                                🍛
+                            {% elif "Lassi" in item.name %}
+                                🥛
+                            {% elif "Chhas" in item.name %}
+                                🥛
+                            {% elif "Thali" in item.name %}
+                                🍱
+                            {% else %}
+                                🍽️
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="food-content">
+
+                            <h3>
+                                {{ item.name }}
+                            </h3>
+
+                            <p class="price">
+                                ₹{{ item.price }}
+                            </p>
+
+
+                            {% if item.stock > 0 %}
+
+                                <div class="availability available">
+                                    ✔ {{ item.stock }} available
+                                </div>
+
+                                <button class="cart-button">
+                                    🛒 Add to Cart
+                                </button>
+
+                            {% else %}
+
+                                <div class="availability unavailable">
+                                    ✖ Out of Stock
+                                </div>
+
+                                <button class="cart-button disabled" disabled>
+                                    Out of Stock
+                                </button>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="no-food">
+                    No food items available right now.
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= ABOUT ================= -->
+
+    <section class="about-section" id="about">
+
+        <div class="about-illustration">
+
+            <div class="building">
+                🏛️
+            </div>
+
+        </div>
+
+
+        <div class="about-content">
+
+            <p class="small-title">
+                ABOUT OUR CANTEEN
+            </p>
+
+            <h2>
+                Fresh Food.
+                <br>
+                Happy Students.
+            </h2>
+
+            <p>
+                Gujarat Vidyapith Canteen provides fresh,
+                tasty and affordable food for students and
+                staff within the college campus.
+            </p>
+
+            <p>
+                Our goal is to make food ordering simple,
+                quick and convenient during college breaks.
+            </p>
+
+            <a href="#menu" class="learn-btn">
+                Explore Menu →
+            </a>
+
+        </div>
+
+
+        <div class="about-features">
+
+            <div class="about-feature">
+
+                <div class="about-icon">
+                    🌿
+                </div>
+
+                <div>
+                    <h4>Fresh Ingredients</h4>
+                    <p>Quality Food</p>
+                </div>
+
+            </div>
+
+
+            <div class="about-feature">
+
+                <div class="about-icon">
+                    ❤️
+                </div>
+
+                <div>
+                    <h4>Hygienic Preparation</h4>
+                    <p>Clean & Safe</p>
+                </div>
+
+            </div>
+
+
+            <div class="about-feature">
+
+                <div class="about-icon">
+                    👨‍🎓
+                </div>
+
+                <div>
+                    <h4>For Students & Staff</h4>
+                    <p>College Campus</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= CONTACT ================= -->
+
+    <section class="contact-section" id="contact">
+
+        <h2>Visit Our Canteen</h2>
+
+        <p>
+            Gujarat Vidyapith Campus, Ahmedabad
+        </p>
+
+        <p>
+            Fresh Food • Easy Ordering • Campus Service
+        </p>
+
+    </section>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <div class="footer-brand">
+
+            <div class="footer-logo">
+                GV
+            </div>
+
+            <div>
+                <h3>Gujarat Vidyapith Canteen</h3>
+
+                <p>
+                    Gujarat Vidyapith, Ahmedabad
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="footer-quote">
+            “સાદું ભોજન • સારી સેવા”
+        </div>
+
+
+        <div class="footer-bottom">
+            © 2026 Gujarat Vidyapith Canteen. All Rights Reserved.
+        </div>
+
+    </footer>
+
+
+</body>
+
+</html>
