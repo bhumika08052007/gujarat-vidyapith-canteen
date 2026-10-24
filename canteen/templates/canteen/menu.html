@@ -1,0 +1,218 @@
+
+{% extends 'canteen/base.html' %}
+{% load static %}
+
+{% block title %}Menu | Gujarat Vidyapith Canteen{% endblock %}
+
+{% block extra_head %}
+<style>
+    .menu-page {
+        background: #f5f6f8;
+        min-height: 100vh;
+        padding: 70px 7%;
+    }
+
+    .menu-title {
+        text-align: center;
+        margin-bottom: 45px;
+    }
+
+    .menu-title h1 {
+        color: #1f3c88;
+        font-size: 38px;
+        margin-bottom: 10px;
+    }
+
+    .menu-title p {
+        color: #666;
+        font-size: 16px;
+    }
+
+    .menu-container {
+        max-width: 1150px;
+        margin: auto;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 25px;
+    }
+
+    .menu-card {
+        background: #fff;
+        border: 1px solid #e0e3e8;
+        border-radius: 12px;
+        padding: 15px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06);
+        transition: transform 0.3s, box-shadow 0.3s;
+        overflow: hidden;
+    }
+
+    .menu-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(31, 60, 136, 0.15);
+    }
+
+    .menu-card img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        display: block;
+    }
+
+    .menu-card h3 {
+        color: #1f3c88;
+        font-size: 20px;
+        margin: 8px 0 12px;
+    }
+
+    .menu-card .price {
+        color: #1f3c88;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 12px;
+    }
+
+    .menu-card .available {
+        color: #218838;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .menu-card .unavailable {
+        color: #c62828;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .menu-card .btn {
+        display: inline-block;
+        background: #1f3c88;
+        color: white;
+        padding: 10px 22px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+        transition: background 0.3s;
+    }
+
+    .menu-card .btn:hover {
+        background: #162d68;
+    }
+
+    .empty {
+        grid-column: 1 / -1;
+        text-align: center;
+        background: white;
+        color: #666;
+        padding: 30px;
+        border-radius: 10px;
+    }
+
+    @media (max-width: 1000px) {
+        .menu-container {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 600px) {
+        .menu-page {
+            padding: 40px 18px;
+        }
+
+        .menu-title h1 {
+            font-size: 30px;
+        }
+
+        .menu-container {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .menu-card img {
+            height: 210px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="menu-page">
+
+    <div class="menu-title">
+        <h1>Our Menu</h1>
+        <p>
+            Fresh and affordable food available at Gujarat Vidyapith Canteen
+        </p>
+    </div>
+
+    <div class="menu-container">
+
+        {% for item in menu_items %}
+
+        <div class="menu-card">
+
+            {% if item.image %}
+                <img
+                    src="{{ item.image.url }}"
+                    alt="{{ item.name }}"
+                >
+            {% elif item.static_image %}
+                <img
+                    src="{% static item.static_image %}"
+                    alt="{{ item.name }}"
+                >
+            {% else %}
+                <div style="height: 180px; display: flex;
+                            align-items: center; justify-content: center;
+                            background: #edf1f8; border-radius: 8px;
+                            color: #666; margin-bottom: 15px;">
+                    Image Not Available
+                </div>
+            {% endif %}
+
+            <h3>{{ item.name }}</h3>
+
+            <div class="price">
+                ₹{{ item.price }}
+            </div>
+
+            {% if item.stock > 0 and item.is_available %}
+
+                <div class="available">
+                    Available
+                </div>
+
+                <a
+                    href="{% url 'add_to_cart' item.id %}"
+                    class="btn"
+                >
+                    Add to Cart
+                </a>
+
+            {% else %}
+
+                <div class="unavailable">
+                    Out of Stock
+                </div>
+
+            {% endif %}
+
+        </div>
+
+        {% empty %}
+
+        <div class="empty">
+            No food items available right now.
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}

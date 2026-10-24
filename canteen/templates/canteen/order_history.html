@@ -1,0 +1,456 @@
+{% extends 'canteen/base.html' %}
+{% load static %}
+
+{% block title %}My Orders | Gujarat Vidyapith Canteen{% endblock %}
+
+{% block extra_head %}
+<style>
+    .orders-page {
+        min-height: 80vh;
+        padding: 50px 7%;
+        background: #f5f8fc;
+    }
+
+    .orders-header {
+        max-width: 950px;
+        margin: 0 auto 35px;
+    }
+
+    .orders-header h1 {
+        color: #173b78;
+        font-size: 32px;
+        margin-bottom: 8px;
+    }
+
+    .orders-header p {
+        color: #64748b;
+        font-size: 15px;
+    }
+
+    .orders-container {
+        max-width: 950px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .order-card {
+        background: #ffffff;
+        border-radius: 14px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .order-card:hover {
+        box-shadow: 0 8px 25px rgba(30, 64, 175, 0.08);
+    }
+
+    .order-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 25px;
+        background: #f8fafc;
+        border-bottom: 1px solid #edf2f7;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .order-meta {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        flex-wrap: wrap;
+    }
+
+    .order-id {
+        font-weight: 700;
+        color: #173b78;
+        font-size: 16px;
+    }
+
+    .order-date {
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 5px 14px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: capitalize;
+    }
+
+    .status-Pending {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .status-Preparing {
+        background: #e0f2fe;
+        color: #0369a1;
+    }
+
+    .status-Ready {
+        background: #dcfce7;
+        color: #15803d;
+    }
+
+    .status-Completed,
+    .status-Delivered {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .status-Cancelled {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .order-items-list {
+        padding: 10px 25px;
+    }
+
+    .order-item-row {
+        display: grid;
+        grid-template-columns: 50px 1fr 100px 90px;
+        align-items: center;
+        gap: 15px;
+        padding: 14px 0;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .order-item-row:last-child {
+        border-bottom: none;
+    }
+
+    .order-item-thumb {
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+        object-fit: cover;
+        background: #eff6ff;
+        border: 1px solid #e2e8f0;
+    }
+
+    .order-item-fallback {
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+        background: #eff6ff;
+        color: #2563eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 13px;
+        border: 1px solid #bfdbfe;
+    }
+
+    .order-item-name {
+        font-weight: 600;
+        color: #1e293b;
+        font-size: 15px;
+    }
+
+    .order-item-price {
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    .order-item-total {
+        font-weight: 700;
+        color: #173b78;
+        font-size: 15px;
+        text-align: right;
+    }
+
+    .order-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 25px;
+        background: #fafcff;
+        border-top: 1px solid #edf2f7;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .order-payment-info {
+        font-size: 13px;
+        color: #64748b;
+    }
+
+    .order-grand-total {
+        font-size: 17px;
+        color: #1e293b;
+    }
+
+    .order-grand-total strong {
+        color: #2563eb;
+        font-size: 19px;
+    }
+
+    .order-cancel-form {
+        margin-top: 12px;
+    }
+
+    .cancel-order-btn {
+        background: #fff;
+        border: 1px solid #dc2626;
+        border-radius: 7px;
+        color: #b91c1c;
+        cursor: pointer;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 8px 14px;
+    }
+
+    .cancel-order-btn:hover {
+        background: #fef2f2;
+    }
+
+    .cancel-order-note {
+        color: #64748b;
+        font-size: 12px;
+        margin-top: 6px;
+    }
+
+    .order-notification {
+        background: #e9f8ef;
+        border: 1px solid #a7dfba;
+        border-radius: 8px;
+        color: #17683a;
+        display: none;
+        margin-top: 16px;
+        padding: 12px 16px;
+    }
+
+    .empty-orders {
+        max-width: 600px;
+        margin: 40px auto;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 60px 30px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    }
+
+    .empty-orders-icon {
+        width: 75px;
+        height: 75px;
+        border-radius: 50%;
+        background: #eff6ff;
+        color: #2563eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        margin: 0 auto 20px;
+        border: 1px solid #bfdbfe;
+    }
+
+    .empty-orders h2 {
+        color: #173b78;
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .empty-orders p {
+        color: #64748b;
+        font-size: 14px;
+        margin-bottom: 25px;
+    }
+
+    .empty-orders-btn {
+        display: inline-block;
+        background: #2563eb;
+        color: #ffffff;
+        padding: 12px 28px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+    .empty-orders-btn:hover {
+        background: #1d4ed8;
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 600px) {
+        .order-item-row {
+            grid-template-columns: 48px 1fr 70px;
+        }
+        .order-item-price {
+            display: none;
+        }
+        .orders-page {
+            padding: 30px 4%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="orders-page">
+    <div class="orders-header">
+        <h1>My Order History</h1>
+        <p>View all your past and current food orders at Gujarat Vidyapith Canteen</p>
+        <div class="order-notification" id="order-notification" role="status" aria-live="polite"></div>
+    </div>
+
+    {% if orders %}
+    <div class="orders-container">
+        {% for order in orders %}
+        <div class="order-card" data-order-id="{{ order.id }}" data-order-status="{{ order.status }}">
+            <div class="order-top">
+                <div class="order-meta">
+                    <span class="order-id">Order #{{ order.id }}</span>
+                    <span class="order-date">{{ order.created_at|date:"d M Y, h:i A" }}</span>
+                </div>
+                <span class="status-badge status-{{ order.status }}">
+                    {{ order.get_status_display }}
+                </span>
+            </div>
+
+            {% if order.can_cancel %}
+            <div style="padding: 12px 25px 0;">
+                <form
+                    class="order-cancel-form"
+                    method="post"
+                    action="{% url 'cancel_order' order.id %}"
+                    onsubmit="return confirm('Cancel this order?');"
+                >
+                    {% csrf_token %}
+                    <button class="cancel-order-btn" type="submit">Cancel order</button>
+                </form>
+                <div class="cancel-order-note">
+                    You can cancel this order until the canteen starts preparing it.
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="order-items-list">
+                {% for item in order.items.all %}
+                <div class="order-item-row">
+                    {% if item.food_item.image %}
+                        <img src="{{ item.food_item.image.url }}" alt="{{ item.food_name }}" class="order-item-thumb">
+                    {% elif item.static_image %}
+                        <img src="{% static item.static_image %}" alt="{{ item.food_name }}" class="order-item-thumb">
+                    {% else %}
+                        <div class="order-item-fallback">GV</div>
+                    {% endif %}
+
+                    <div>
+                        <div class="order-item-name">{{ item.food_name }}</div>
+                        <div style="font-size: 12px; color: #94a3b8;">Qty: {{ item.quantity }}</div>
+                    </div>
+
+                    <div class="order-item-price">
+                        ₹{{ item.price }}
+                    </div>
+
+                    <div class="order-item-total">
+                        ₹{{ item.total_price }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="order-bottom">
+                <div class="order-payment-info">
+                    <strong>Payment:</strong>
+                    {% if order.payment_method == "online" %}
+                        Online (Razorpay)
+                    {% elif "Google Pay" in order.payment_method or "UPI" in order.payment_method %}
+                        Google Pay (UPI)
+                    {% else %}
+                        Cash on Delivery
+                    {% endif %}
+                    {% if order.razorpay_payment_id and order.razorpay_payment_id != "GPay-Direct" %}
+                        <span style="font-size: 12px; color: #64748b;">(UTR: {{ order.razorpay_payment_id }})</span>
+                    {% endif %}
+                </div>
+
+                <div class="order-grand-total">
+                    Total: <strong>₹{{ order.total_amount }}</strong>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-orders">
+        <div class="empty-orders-icon">📋</div>
+        <h2>No Orders Yet</h2>
+        <p>You haven't placed any orders yet. Check out our fresh menu and enjoy tasty food!</p>
+        <a href="{% url 'menu' %}" class="empty-orders-btn">Explore Menu →</a>
+    </div>
+    {% endif %}
+</section>
+
+<script>
+    (function () {
+        const statusUrl = "{% url 'order_status_updates' %}";
+        const notification = document.getElementById("order-notification");
+        const cards = new Map();
+
+        document.querySelectorAll("[data-order-id]").forEach(function (card) {
+            cards.set(card.dataset.orderId, card);
+        });
+
+        async function refreshOrderStatuses() {
+            try {
+                const response = await fetch(statusUrl, {
+                    headers: { "Accept": "application/json" },
+                    cache: "no-store"
+                });
+                if (!response.ok) {
+                    throw new Error("Order status request failed: " + response.status);
+                }
+
+                const data = await response.json();
+                data.orders.forEach(function (order) {
+                    const card = cards.get(String(order.id));
+                    if (!card || card.dataset.orderStatus === order.status) {
+                        return;
+                    }
+
+                    card.dataset.orderStatus = order.status;
+                    const badge = card.querySelector(".status-badge");
+                    badge.className = "status-badge status-" + order.status;
+                    badge.textContent = order.status;
+
+                    if (order.status === "Ready" || order.status === "Cancelled") {
+                        notification.textContent = "Order #" + order.id + " is now " +
+                            order.status.toLowerCase() + ".";
+                        notification.style.display = "block";
+                    }
+
+                    if (order.status !== "Pending") {
+                        const cancelForm = card.querySelector(".order-cancel-form");
+                        if (cancelForm) {
+                            cancelForm.closest("div").remove();
+                        }
+                    }
+
+                });
+            } catch (error) {
+                notification.textContent = "Order updates could not be refreshed. Please reload this page.";
+                notification.style.display = "block";
+                console.error(error);
+            }
+        }
+
+        window.setInterval(refreshOrderStatuses, 15000);
+    })();
+</script>
+{% endblock %}

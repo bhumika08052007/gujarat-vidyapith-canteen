@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: gujarat-vidyapith-canteen
+    runtime: python
+    plan: free
+    region: singapore
+    buildCommand: pip install -r requirements-render.txt && python manage.py collectstatic --no-input && python manage.py migrate && python manage.py seed_food_items
+    startCommand: gunicorn canteen_project.wsgi:application
+    envVars:
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: gujarat-vidyapith-canteen-db
+          property: connectionString
+
+databases:
+  - name: gujarat-vidyapith-canteen-db
+    databaseName: canteen
+    user: canteen
+    plan: free
+    region: singapore

@@ -1,0 +1,97 @@
+{% extends 'canteen/base.html' %}
+{% load static %}
+
+{% block title %}Order Success | Gujarat Vidyapith Canteen{% endblock %}
+
+{% block extra_head %}
+    <style>
+        .container {
+            max-width: 500px;
+            margin: 80px auto;
+            padding: 40px 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .icon {
+            font-size: 60px;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="icon">✓</div>
+        <h2>Order Successful!</h2>
+        <p style="font-size: 16px; line-height: 1.8;">
+            <strong>તમારો ઓર્ડર સફળતાપૂર્વક કન્ફર્મ થઈ ગયો છે!</strong>
+            {% if order %}
+            <br><span style="color: #2563eb; font-weight: bold;">Order ID: #{{ order.id }}</span>
+            <br>Total Amount: <strong>₹{{ order.total_amount }}</strong>
+            {% endif %}
+            <br><br>
+            કૃપા કરીને કેન્ટીન કાઉન્ટર પર જઈને તમારો ઓર્ડર મેળવો અને ત્યાં રોકડ ચૂકવણી કરો.
+            <br>
+            <small style="color: #64748b;">(Please collect your food from the canteen counter and pay at the counter.)</small>
+        </p>
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+            <a href="{% url 'order_history' %}" class="btn" style="background: #28a745;">View My Orders</a>
+            <a href="{% url 'home' %}" class="btn">Return to Home</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const ctx = new AudioCtx();
+                const now = ctx.currentTime;
+                // Celebratory 4-note chime
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((freq, idx) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = "sine";
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.12);
+                    gain.gain.setValueAtTime(0.001, now + idx * 0.12);
+                    gain.gain.exponentialRampToValueAtTime(0.3, now + idx * 0.12 + 0.02);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.12 + 0.55);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now + idx * 0.12);
+                    osc.stop(now + idx * 0.12 + 0.55);
+                });
+            } catch(e) {}
+        });
+    </script>
+{% endblock %}

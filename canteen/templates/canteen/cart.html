@@ -1,0 +1,358 @@
+{% extends 'canteen/base.html' %}
+{% load static %}
+
+{% block title %}My Cart | Gujarat Vidyapith Canteen{% endblock %}
+{% block body_class %}cart-page{% endblock %}
+
+{% block content %}
+
+
+<!-- ================= HERO ================= -->
+
+<section class="cart-hero">
+
+
+<div class="cart-hero-content">
+
+    <p class="hero-small-text">
+        YOUR SELECTED FOOD
+    </p>
+
+    <h1>
+        My Cart
+    </h1>
+
+    <p class="hero-description">
+        Review your selected items before placing your order.
+    </p>
+
+    <a href="{% url 'menu' %}" class="cart-back-link">
+        ← Continue Shopping
+    </a>
+
+</div>
+
+
+</section>
+
+<!-- ================= CART SECTION ================= -->
+
+<section class="cart-section">
+
+{% if cart_items %}
+
+<div class="cart-container">
+
+
+<!-- ================= LEFT SIDE ================= -->
+
+<div class="cart-items-panel">
+
+
+    <div class="cart-panel-heading">
+
+        <div>
+
+            <p class="section-label">
+                YOUR ORDER
+            </p>
+
+            <h2>
+                Your items
+            </h2>
+
+            <p>
+                Check your food items and quantities.
+            </p>
+
+        </div>
+
+
+        <div class="cart-item-count">
+
+            {{ cart_items|length }}
+            item{{ cart_items|length|pluralize }}
+
+        </div>
+
+    </div>
+
+
+
+    <!-- PRODUCT LIST -->
+
+    <div class="cart-product-list">
+
+
+        {% for cart_item in cart_items %}
+
+
+        <article class="cart-product">
+
+
+            <!-- PRODUCT ICON / IMAGE -->
+
+            <div class="cart-product-icon">
+
+                {% if cart_item.item.image %}
+                    <img src="{{ cart_item.item.image.url }}" alt="{{ cart_item.item.name }}" class="cart-product-thumb">
+                {% elif cart_item.item.static_image %}
+                    <img src="{% static cart_item.item.static_image %}" alt="{{ cart_item.item.name }}" class="cart-product-thumb">
+                {% else %}
+                    <span>GV</span>
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- PRODUCT DETAILS -->
+
+            <div class="cart-product-details">
+
+                <h3>
+                    {{ cart_item.item.name }}
+                </h3>
+
+                <p class="product-price">
+
+                    ₹{{ cart_item.item.price }}
+
+                    <span>
+                        per item
+                    </span>
+
+                </p>
+
+            </div>
+
+
+
+            <!-- QUANTITY -->
+
+            <div class="cart-product-quantity">
+
+                <span>
+                    Quantity
+                </span>
+
+                <strong>
+                    {{ cart_item.quantity }}
+                </strong>
+
+            </div>
+
+
+
+            <!-- TOTAL -->
+
+            <div class="cart-product-total">
+
+                <span>
+                    Item Total
+                </span>
+
+                <strong>
+                    ₹{{ cart_item.total }}
+                </strong>
+
+            </div>
+
+
+
+            <!-- REMOVE -->
+
+            <a href="{% url 'remove_from_cart' cart_item.item.id %}"
+               class="remove-btn"
+               aria-label="Remove {{ cart_item.item.name }} from cart">
+
+                Remove
+
+            </a>
+
+
+        </article>
+
+
+        {% endfor %}
+
+
+    </div>
+
+
+    <!-- CONTINUE SHOPPING -->
+
+    <div class="cart-continue">
+
+        <a href="{% url 'menu' %}">
+            ← Add More Items
+        </a>
+
+    </div>
+
+
+</div>
+
+
+
+<!-- ================= RIGHT SUMMARY ================= -->
+
+<aside class="cart-summary">
+
+
+    <div class="summary-heading">
+
+        <p>
+            ORDER DETAILS
+        </p>
+
+        <h2>
+            Order summary
+        </h2>
+
+    </div>
+
+
+
+    <div class="summary-line">
+
+        <span>
+            Items
+        </span>
+
+        <strong>
+            {{ cart_items|length }}
+        </strong>
+
+    </div>
+
+
+
+    <div class="summary-line">
+
+        <span>
+            Subtotal
+        </span>
+
+        <strong>
+            ₹{{ grand_total }}
+        </strong>
+
+    </div>
+
+
+
+    <div class="summary-line">
+
+        <span>
+            Service Fee
+        </span>
+
+        <strong>
+            ₹0.00
+        </strong>
+
+    </div>
+
+
+
+    <div class="summary-divider"></div>
+
+
+
+    <div class="summary-total">
+
+        <span>
+            Total Amount
+        </span>
+
+        <strong>
+            ₹{{ grand_total }}
+        </strong>
+
+    </div>
+
+
+
+    <!-- CHECKOUT -->
+
+    <a href="{% url 'checkout' %}"
+       class="checkout-btn">
+
+        Proceed to Checkout
+
+        <span>
+            →
+        </span>
+
+    </a>
+
+
+
+    <div class="secure-note">
+
+        <strong>
+            Easy Ordering
+        </strong>
+
+        <p>
+            ઓર્ડર કન્ફર્મ કરો અને કેન્ટીન કાઉન્ટર પર પેમેન્ટ કરો.
+        </p>
+
+    </div>
+
+
+</aside>
+
+
+</div>
+
+{% else %}
+
+<!-- ================= EMPTY CART ================= -->
+
+<div class="empty-cart">
+
+
+<div class="empty-cart-icon">
+
+    CART
+
+</div>
+
+
+<p class="empty-cart-eyebrow">
+    YOUR CART
+</p>
+
+
+<h2>
+    Your cart is empty
+</h2>
+
+
+<p>
+    You haven't added any food items yet.
+    Explore our menu and choose your favourite food.
+</p>
+
+
+<a href="{% url 'menu' %}"
+   class="menu-btn">
+
+    Explore Menu
+
+    <span>
+        →
+    </span>
+
+</a>
+
+
+</div>
+
+{% endif %}
+
+</section>
+
+{% endblock %}

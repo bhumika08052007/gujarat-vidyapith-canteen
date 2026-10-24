@@ -1,0 +1,233 @@
+{% extends 'canteen/base.html' %}
+{% load static %}
+
+{% block title %}Login / Register | Gujarat Vidyapith Canteen{% endblock %}
+
+{% block extra_head %}
+    <style>
+        .container {
+            max-width: 440px;
+            margin: 80px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .auth-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 24px;
+            padding: 5px;
+            border-radius: 8px;
+            background: #f1f3f5;
+        }
+
+        .auth-tab {
+            padding: 10px;
+            border: 0;
+            border-radius: 6px;
+            background: transparent;
+            color: #555;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .auth-tab.active {
+            background: #007bff;
+            color: #fff;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+
+        .alert {
+            padding: 10px;
+            background: #f8d7da;
+            color: #721c24;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            text-decoration: none;
+            color: #007bff;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2>Welcome</h2>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {% if message.tags == 'success' %}success{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <div class="auth-tabs" role="tablist" aria-label="Account options">
+            <button
+                class="auth-tab {% if active_form == 'login' %}active{% endif %}"
+                id="login-tab"
+                type="button"
+                role="tab"
+                aria-controls="login-panel"
+                aria-selected="{% if active_form == 'login' %}true{% else %}false{% endif %}"
+                data-auth-tab="login">
+                Login
+            </button>
+            <button
+                class="auth-tab {% if active_form == 'register' %}active{% endif %}"
+                id="register-tab"
+                type="button"
+                role="tab"
+                aria-controls="register-panel"
+                aria-selected="{% if active_form == 'register' %}true{% else %}false{% endif %}"
+                data-auth-tab="register">
+                Register
+            </button>
+        </div>
+
+        <section id="login-panel" role="tabpanel" aria-labelledby="login-tab"
+            {% if active_form != 'login' %}hidden{% endif %}>
+            <h2>Email Login</h2>
+            <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input id="login-email" type="email" name="email" required placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input id="login-password" type="password" name="password" required placeholder="Enter your password">
+                </div>
+                <button type="submit" class="btn">Login</button>
+            </form>
+        </section>
+
+        <section id="register-panel" role="tabpanel" aria-labelledby="register-tab"
+            {% if active_form != 'register' %}hidden{% endif %}>
+            <h2>Create Account</h2>
+            <form method="POST" action="{% url 'register' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="register-name">Full Name</label>
+                    <input id="register-name" type="text" name="name" required placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input id="register-email" type="email" name="email" required placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Password</label>
+                    <input id="register-password" type="password" name="password" required placeholder="Create a password">
+                </div>
+                <button type="submit" class="btn">Register</button>
+            </form>
+        </section>
+    </div>
+
+    <script>
+        const authTabs = document.querySelectorAll("[data-auth-tab]");
+        const authPanels = {
+            login: document.getElementById("login-panel"),
+            register: document.getElementById("register-panel"),
+        };
+
+        authTabs.forEach((tab) => {
+            tab.addEventListener("click", () => {
+                const activeForm = tab.dataset.authTab;
+                authTabs.forEach((authTab) => {
+                    const isActive = authTab === tab;
+                    authTab.classList.toggle("active", isActive);
+                    authTab.setAttribute("aria-selected", String(isActive));
+                });
+                Object.entries(authPanels).forEach(([name, panel]) => {
+                    panel.hidden = name !== activeForm;
+                });
+            });
+        });
+
+        // Client-side JavaScript Validation for Register
+        const registerForm = document.querySelector("#register-panel form");
+        if (registerForm) {
+            registerForm.addEventListener("submit", function(e) {
+                const passInput = document.getElementById("register-password");
+                const emailInput = document.getElementById("register-email");
+                const nameInput = document.getElementById("register-name");
+
+                if (nameInput.value.trim().length < 2) {
+                    e.preventDefault();
+                    alert("Please enter a valid full name (at least 2 characters).");
+                    nameInput.focus();
+                    return false;
+                }
+
+                if (!emailInput.value.includes("@") || !emailInput.value.includes(".")) {
+                    e.preventDefault();
+                    alert("Please enter a valid email address.");
+                    emailInput.focus();
+                    return false;
+                }
+
+                if (passInput.value.length < 6) {
+                    e.preventDefault();
+                    alert("Password must be at least 6 characters long.");
+                    passInput.focus();
+                    return false;
+                }
+            });
+        }
+    </script>
+{% endblock %}

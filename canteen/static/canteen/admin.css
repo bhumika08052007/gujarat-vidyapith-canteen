@@ -1,0 +1,97 @@
+:root {
+    --canteen-admin-blue: #1f3c88;
+    --canteen-admin-blue-dark: #162d68;
+    --canteen-admin-gold: #e7ad32;
+    --canteen-admin-background: #f4f6fa;
+}
+
+body {
+    background: var(--canteen-admin-background);
+}
+
+#header {
+    background: var(--canteen-admin-blue);
+    border-bottom: 4px solid var(--canteen-admin-gold);
+}
+
+#branding h1,
+#branding h1 a:link,
+#branding h1 a:visited {
+    color: #fff;
+    font-weight: 700;
+}
+
+.module h2,
+.module caption,
+.inline-group h2 {
+    background: var(--canteen-admin-blue);
+}
+
+div.breadcrumbs {
+    background: var(--canteen-admin-blue-dark);
+}
+
+.button,
+input[type="submit"],
+input[type="button"],
+.submit-row input,
+a.button {
+    background: var(--canteen-admin-blue);
+    border-radius: 5px;
+}
+
+.button:hover,
+input[type="submit"]:hover,
+input[type="button"]:hover,
+.submit-row input:hover,
+a.button:hover {
+    background: var(--canteen-admin-blue-dark);
+}
+
+.status-badge {
+    border-radius: 999px;
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    white-space: nowrap;
+}
+
+.status-pending {
+    background: #fff1cf;
+    color: #805600;
+}
+
+.status-preparing {
+    background: #dcecff;
+    color: #174b84;
+}
+
+.status-ready {
+    background: #e9ddff;
+    color: #57329a;
+}
+
+.status-completed {
+    background: #d9f2e2;
+    color: #17683a;
+}
+
+.status-cancelled {
+    background: #ffe1e1;
+    color: #922727;
+}
+
+.food-image-preview {
+    border: 1px solid #d9deea;
+    border-radius: 8px;
+    height: 48px;
+    object-fit: cover;
+    width: 64px;
+}
+
+.form-row,
+.module,
+#changelist {
+    border-radius: 8px;
+}

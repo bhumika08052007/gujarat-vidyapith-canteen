@@ -1,0 +1,71 @@
+{% extends 'canteen/base.html' %}
+{% load static %}
+
+{% block title %}Payment | Gujarat Vidyapith Canteen{% endblock %}
+
+{% block extra_head %}
+    <style>
+        .container {
+            max-width: 500px;
+            margin: 80px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .amount {
+            font-size: 24px;
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 30px;
+        }
+
+        .btn-pay {
+            display: inline-block;
+            width: 100%;
+            padding: 15px;
+            background: #528FF0;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .btn-pay:hover {
+            background: #3b76d6;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2>Complete Your Payment</h2>
+        <div class="amount">Total Amount: ₹{{ display_amount|floatformat:2 }}</div>
+
+        {% if payment_error %}
+        <p role="alert">{{ payment_error }}</p>
+        <a href="{% url 'checkout' %}">Return to checkout</a>
+        {% else %}
+        <form action="{% url 'payment_success' %}" method="POST">
+            {% csrf_token %}
+            <script src="https://checkout.razorpay.com/v1/checkout.js" data-key="{{ razorpay_key_id }}"
+                data-amount="{{ amount }}" data-currency="INR" data-order_id="{{ order_id }}"
+                data-buttontext="Pay with Razorpay" data-name="Gujarat Vidyapith Canteen"
+                data-description="Food Order Payment"
+                data-image="https://upload.wikimedia.org/wikipedia/en/thumb/5/53/Gujarat_Vidyapith_Logo.png/220px-Gujarat_Vidyapith_Logo.png"
+                data-prefill.name="{{ customer_name }}" data-prefill.email="{{ customer_email }}"
+                data-theme.color="#528FF0"></script>
+            <input type="hidden" custom="Hidden Element" name="hidden">
+        </form>
+        {% endif %}
+    </div>
+{% endblock %}

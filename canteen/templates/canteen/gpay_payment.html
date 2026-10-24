@@ -1,0 +1,771 @@
+{% extends 'canteen/base.html' %}
+{% load static %}
+
+{% block title %}Google Pay / UPI Verification | Gujarat Vidyapith Canteen{% endblock %}
+
+{% block extra_head %}
+<style>
+    .gpay-page {
+        min-height: 85vh;
+        padding: 40px 15px;
+        background: #f1f5f9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .gpay-card {
+        max-width: 500px;
+        width: 100%;
+        background: #ffffff;
+        border-radius: 18px;
+        box-shadow: 0 10px 35px rgba(15, 23, 42, 0.12);
+        border: 1px solid #e2e8f0;
+        overflow: hidden;
+        transition: transform 0.2s;
+    }
+
+    .shake {
+        animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        20%, 60% { transform: translateX(-8px); }
+        40%, 80% { transform: translateX(8px); }
+    }
+
+    .gpay-header {
+        background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+        color: white;
+        padding: 24px 20px;
+        text-align: center;
+        position: relative;
+    }
+
+    .gpay-brand {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+
+    .gpay-logo-badge {
+        background: #ffffff;
+        color: #1a73e8;
+        font-weight: 800;
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-size: 15px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .gpay-header p {
+        margin-top: 6px;
+        font-size: 13px;
+        opacity: 0.9;
+    }
+
+    .gpay-body {
+        padding: 28px 24px;
+    }
+
+    .amount-banner {
+        background: #f8fafc;
+        border: 1px dashed #cbd5e1;
+        border-radius: 12px;
+        padding: 16px;
+        text-align: center;
+        margin-bottom: 22px;
+    }
+
+    .amount-label {
+        font-size: 13px;
+        color: #64748b;
+        text-transform: uppercase;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+
+    .amount-value {
+        font-size: 32px;
+        font-weight: 800;
+        color: #1e293b;
+        margin-top: 4px;
+    }
+
+    .qr-container {
+        text-align: center;
+        background: #ffffff;
+        padding: 14px;
+        border-radius: 16px;
+        border: 2px solid #e2e8f0;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+        max-width: 270px;
+        margin: 0 auto 20px;
+    }
+
+    .qr-image {
+        width: 100%;
+        max-width: 240px;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        border-radius: 8px;
+    }
+
+    .qr-instruction {
+        font-size: 13px;
+        color: #475569;
+        margin-top: 8px;
+        font-weight: 600;
+    }
+
+    .upi-apps-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .upi-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        background: #f1f5f9;
+        color: #334155;
+        border: 1px solid #e2e8f0;
+    }
+
+    .upi-id-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 10px 14px;
+        margin-bottom: 20px;
+    }
+
+    .upi-id-text {
+        font-family: monospace;
+        font-size: 14px;
+        color: #1e293b;
+        font-weight: 600;
+        word-break: break-all;
+    }
+
+    .copy-btn {
+        background: #e2e8f0;
+        color: #334155;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+        white-space: nowrap;
+        margin-left: 8px;
+    }
+
+    .copy-btn:hover {
+        background: #cbd5e1;
+    }
+
+    .btn-mobile-intent {
+        display: block;
+        width: 100%;
+        text-align: center;
+        background: #1a73e8;
+        color: #ffffff;
+        padding: 12px 18px;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 15px;
+        text-decoration: none;
+        margin-bottom: 20px;
+        transition: 0.2s;
+        box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+    }
+
+    .btn-mobile-intent:hover {
+        background: #1557b0;
+        color: #ffffff;
+    }
+
+    .verification-form {
+        border-top: 1px solid #e2e8f0;
+        padding-top: 20px;
+    }
+
+    .utr-header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 6px;
+    }
+
+    .form-label {
+        font-size: 13px;
+        color: #334155;
+        font-weight: 600;
+    }
+
+    .utr-badge {
+        font-size: 11px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 10px;
+        background: #e2e8f0;
+        color: #475569;
+    }
+
+    .utr-badge.complete {
+        background: #dcfce7;
+        color: #15803d;
+    }
+
+    .utr-input-wrapper {
+        position: relative;
+        margin-bottom: 6px;
+    }
+
+    .utr-input {
+        width: 100%;
+        padding: 12px 14px;
+        border: 2px solid #cbd5e1;
+        border-radius: 10px;
+        font-size: 16px;
+        font-family: monospace;
+        letter-spacing: 1px;
+        outline: none;
+        transition: all 0.2s;
+        box-sizing: border-box;
+    }
+
+    .utr-input:focus {
+        border-color: #1a73e8;
+        box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.15);
+    }
+
+    .utr-input.is-valid {
+        border-color: #16a34a;
+        background: #f0fdf4;
+    }
+
+    .utr-input.is-invalid {
+        border-color: #dc2626;
+        background: #fef2f2;
+    }
+
+    .feedback-message {
+        font-size: 12px;
+        margin-bottom: 14px;
+        min-height: 18px;
+        color: #64748b;
+    }
+
+    .feedback-message.error {
+        color: #dc2626;
+        font-weight: 600;
+    }
+
+    .feedback-message.success {
+        color: #16a34a;
+        font-weight: 600;
+    }
+
+    .demo-helper-row {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 12px;
+    }
+
+    .demo-btn {
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        color: #1d4ed8;
+        font-size: 11px;
+        padding: 4px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: 0.2s;
+    }
+
+    .demo-btn:hover {
+        background: #dbeafe;
+    }
+
+    .btn-confirm {
+        width: 100%;
+        padding: 14px;
+        background: #16a34a;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+        box-shadow: 0 4px 14px rgba(22, 163, 74, 0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .btn-confirm:hover {
+        background: #15803d;
+    }
+
+    .cancel-link {
+        display: block;
+        text-align: center;
+        margin-top: 14px;
+        color: #64748b;
+        font-size: 13px;
+        text-decoration: none;
+    }
+
+    .cancel-link:hover {
+        color: #dc2626;
+        text-decoration: underline;
+    }
+
+    /* Verification Modal Overlay */
+    .verify-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(15, 23, 42, 0.7);
+        backdrop-filter: blur(4px);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .verify-overlay.active {
+        display: flex;
+    }
+
+    .verify-box {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 35px 25px;
+        max-width: 380px;
+        width: 90%;
+        text-align: center;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+        animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popIn {
+        0% { transform: scale(0.8); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    .spinner-ring {
+        width: 60px;
+        height: 60px;
+        border: 4px solid #e2e8f0;
+        border-top: 4px solid #1a73e8;
+        border-right: 4px solid #34a853;
+        border-bottom: 4px solid #fbbc05;
+        border-left: 4px solid #ea4335;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+        animation: spin 0.9s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .success-check-icon {
+        display: none;
+        width: 64px;
+        height: 64px;
+        background: #16a34a;
+        color: white;
+        border-radius: 50%;
+        font-size: 36px;
+        line-height: 64px;
+        margin: 0 auto 20px;
+        animation: popCheck 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popCheck {
+        0% { transform: scale(0); }
+        100% { transform: scale(1); }
+    }
+
+    .verify-title {
+        font-size: 19px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 8px;
+    }
+
+    .verify-sub {
+        font-size: 13px;
+        color: #64748b;
+        line-height: 1.5;
+    }
+
+    .verify-details {
+        margin-top: 15px;
+        padding: 10px;
+        background: #f8fafc;
+        border-radius: 8px;
+        font-family: monospace;
+        font-size: 12px;
+        color: #334155;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="gpay-page">
+    <div class="gpay-card" id="gpayCard">
+        <!-- Header -->
+        <div class="gpay-header">
+            <div class="gpay-brand">
+                <span class="gpay-logo-badge">G Pay</span>
+                <span>UPI Payment</span>
+            </div>
+            <p>{{ canteen_upi_name }}</p>
+        </div>
+
+        <div class="gpay-body">
+            <!-- Amount Banner -->
+            <div class="amount-banner">
+                <div class="amount-label">Amount to Pay</div>
+                <div class="amount-value" id="orderAmount">₹{{ display_amount }}</div>
+            </div>
+
+            <!-- UPI Apps row -->
+            <div class="upi-apps-row">
+                <span class="upi-pill">🟢 Google Pay</span>
+                <span class="upi-pill">🟣 PhonePe</span>
+                <span class="upi-pill">🔵 Paytm</span>
+                <span class="upi-pill">🟠 BHIM UPI</span>
+            </div>
+
+            <!-- Dynamic QR Code -->
+            <div class="qr-container">
+                <img src="{{ qr_url }}" alt="Scan with Google Pay or UPI" class="qr-image">
+                <div class="qr-instruction">📲 Scan QR code with Google Pay / UPI</div>
+            </div>
+
+            <!-- Mobile Direct Pay Button -->
+            <a href="{{ upi_uri }}" class="btn-mobile-intent">
+                👉 Tap to Pay with Google Pay App
+            </a>
+
+            <!-- UPI ID Box -->
+            <div class="upi-id-box">
+                <div>
+                    <div style="font-size: 11px; color: #64748b; text-transform: uppercase;">Canteen UPI ID</div>
+                    <div class="upi-id-text" id="upiIdText">{{ canteen_upi_id }}</div>
+                </div>
+                <button type="button" class="copy-btn" id="copyBtn" onclick="copyUpiId()">Copy</button>
+            </div>
+
+            <!-- Confirmation Form with JavaScript Verification -->
+            <form method="POST" action="{% url 'gpay_payment' %}" class="verification-form" id="paymentForm" onsubmit="return handlePaymentSubmit(event)">
+                {% csrf_token %}
+                <div class="utr-header-row">
+                    <label class="form-label" for="utr_number">
+                        UPI Reference / UTR Number
+                    </label>
+                    <span class="utr-badge" id="utrBadge">0 / 12 digits</span>
+                </div>
+
+                <div class="utr-input-wrapper">
+                    <input
+                        type="text"
+                        id="utr_number"
+                        name="utr_number"
+                        class="utr-input"
+                        placeholder="Enter 12-digit UTR (e.g. 423981023841)"
+                        maxlength="16"
+                        autocomplete="off"
+                    >
+                </div>
+
+                <div class="feedback-message" id="feedbackMsg">
+                    Scan the QR code, pay via Google Pay, and enter the 12-digit UTR below.
+                </div>
+
+                <div class="demo-helper-row" style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;">
+                    <div style="display: flex; gap: 6px;">
+                        <button type="button" class="demo-btn" id="soundToggleBtn" onclick="toggleSound()">
+                            🔊 Sound: ON
+                        </button>
+                        <button type="button" class="demo-btn" onclick="testSound()">
+                            🎵 Test Sound
+                        </button>
+                    </div>
+                    <button type="button" class="demo-btn" onclick="fillDemoUtr()">
+                        ⚡ Fill Demo UTR
+                    </button>
+                </div>
+
+                <button type="submit" class="btn-confirm" id="confirmBtn">
+                    <span>✓ Verify & Place Order</span>
+                </button>
+
+                <a href="{% url 'cart' %}" class="cancel-link">
+                    ← Cancel and Return to Cart
+                </a>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Fullscreen JavaScript Verification Modal -->
+<div class="verify-overlay" id="verifyOverlay">
+    <div class="verify-box">
+        <div class="spinner-ring" id="verifySpinner"></div>
+        <div class="success-check-icon" id="verifyCheck">✓</div>
+        <div class="verify-title" id="verifyTitle">Verifying with Google Pay...</div>
+        <div class="verify-sub" id="verifySub">
+            Checking transaction of <strong>₹{{ display_amount }}</strong> with UPI Network...
+        </div>
+        <div class="verify-details" id="verifyDetails">
+            UTR: <span id="modalUtr"></span>
+        </div>
+    </div>
+</div>
+
+<script>
+    let soundEnabled = true;
+
+    // Toggle Sound On / Off
+    function toggleSound() {
+        soundEnabled = !soundEnabled;
+        const btn = document.getElementById("soundToggleBtn");
+        if (soundEnabled) {
+            btn.innerText = "🔊 Sound: ON";
+            btn.style.color = "#15803d";
+            btn.style.borderColor = "#86efac";
+            btn.style.background = "#f0fdf4";
+            playChimeSound();
+        } else {
+            btn.innerText = "🔇 Sound: OFF";
+            btn.style.color = "#64748b";
+            btn.style.borderColor = "#cbd5e1";
+            btn.style.background = "#f1f5f9";
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+        }
+    }
+
+    // Google Pay Iconic Harmonious Chime (Web Audio API Synthesizer)
+    function playChimeSound() {
+        if (!soundEnabled) return;
+        try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) return;
+            const ctx = new AudioCtx();
+            const now = ctx.currentTime;
+
+            // 4-note bell chime: C5 (523Hz) -> E5 (659Hz) -> G5 (784Hz) -> C6 (1046Hz)
+            const notes = [
+                { f: 523.25, t: 0.00, d: 0.22, vol: 0.35 },
+                { f: 659.25, t: 0.10, d: 0.22, vol: 0.35 },
+                { f: 783.99, t: 0.20, d: 0.25, vol: 0.40 },
+                { f: 1046.50, t: 0.32, d: 0.75, vol: 0.50 }
+            ];
+
+            notes.forEach(n => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.type = "sine";
+                osc.frequency.setValueAtTime(n.f, now + n.t);
+
+                // Smooth exponential bell decay envelope
+                gain.gain.setValueAtTime(0.001, now + n.t);
+                gain.gain.exponentialRampToValueAtTime(n.vol, now + n.t + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + n.t + n.d);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start(now + n.t);
+                osc.stop(now + n.t + n.d);
+            });
+        } catch (e) {
+            console.log("Audio play error", e);
+        }
+    }
+
+    // Google Pay / UPI Soundbox Voice Announcement (SpeechSynthesis API)
+    function speakAnnouncement(amount) {
+        if (!soundEnabled) return;
+        if (!('speechSynthesis' in window)) return;
+        try {
+            window.speechSynthesis.cancel();
+            const cleanAmount = String(amount || "{{ display_amount }}").replace("₹", "").trim();
+            const message = `Google Pay par ${cleanAmount} rupaye prapt hue.`;
+            const utter = new SpeechSynthesisUtterance(message);
+            utter.rate = 0.95;
+            utter.pitch = 1.05;
+            utter.lang = "hi-IN";
+            window.speechSynthesis.speak(utter);
+        } catch (e) {
+            console.log("Speech error", e);
+        }
+    }
+
+    // Test Sound Button Handler
+    function testSound() {
+        playChimeSound();
+        setTimeout(() => {
+            speakAnnouncement("{{ display_amount }}");
+        }, 550);
+    }
+
+    // Copy UPI ID to clipboard
+    function copyUpiId() {
+        playChimeSound();
+        const upiText = document.getElementById("upiIdText").innerText.trim();
+        navigator.clipboard.writeText(upiText).then(() => {
+            const btn = document.getElementById("copyBtn");
+            btn.innerText = "Copied!";
+            btn.style.background = "#16a34a";
+            btn.style.color = "#ffffff";
+            setTimeout(() => {
+                btn.innerText = "Copy";
+                btn.style.background = "#e2e8f0";
+                btn.style.color = "#334155";
+            }, 2000);
+        });
+    }
+
+    const utrInput = document.getElementById("utr_number");
+    const utrBadge = document.getElementById("utrBadge");
+    const feedbackMsg = document.getElementById("feedbackMsg");
+    const gpayCard = document.getElementById("gpayCard");
+
+    // Real-Time JavaScript Input Verification
+    utrInput.addEventListener("input", function() {
+        let val = this.value.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
+        this.value = val;
+
+        const len = val.length;
+        utrBadge.innerText = `${len} / 12 digits`;
+
+        if (len === 0) {
+            utrInput.classList.remove("is-valid", "is-invalid");
+            utrBadge.classList.remove("complete");
+            feedbackMsg.className = "feedback-message";
+            feedbackMsg.innerText = "Scan the QR code, pay via Google Pay, and enter the 12-digit UTR.";
+        } else if (len < 12) {
+            utrInput.classList.remove("is-valid");
+            utrInput.classList.add("is-invalid");
+            utrBadge.classList.remove("complete");
+            feedbackMsg.className = "feedback-message error";
+            feedbackMsg.innerText = `⚠️ UTR must be 12 digits (${12 - len} more digits required).`;
+        } else {
+            utrInput.classList.remove("is-invalid");
+            utrInput.classList.add("is-valid");
+            utrBadge.classList.add("complete");
+            feedbackMsg.className = "feedback-message success";
+            feedbackMsg.innerText = "✓ Valid 12-digit UPI Transaction reference format.";
+        }
+    });
+
+    // Helper: Fill Demo UTR for quick testing
+    function fillDemoUtr() {
+        playChimeSound();
+        const random12 = "4" + Math.floor(10000000000 + Math.random() * 90000000000);
+        utrInput.value = random12;
+        utrInput.dispatchEvent(new Event("input"));
+    }
+
+    // JavaScript Payment Submit & Verification Simulation with Audio
+    function handlePaymentSubmit(event) {
+        event.preventDefault();
+        const utrVal = utrInput.value.trim();
+
+        // Verification Rule: Must have at least 8-12 characters
+        if (utrVal.length < 8) {
+            utrInput.classList.add("is-invalid");
+            feedbackMsg.className = "feedback-message error";
+            feedbackMsg.innerText = "❌ Please enter a valid 12-digit UPI / Google Pay Transaction UTR.";
+            utrInput.focus();
+
+            // Shake animation
+            gpayCard.classList.add("shake");
+            setTimeout(() => gpayCard.classList.remove("shake"), 500);
+            return false;
+        }
+
+        // Show Verification Modal
+        const overlay = document.getElementById("verifyOverlay");
+        const spinner = document.getElementById("verifySpinner");
+        const check = document.getElementById("verifyCheck");
+        const title = document.getElementById("verifyTitle");
+        const sub = document.getElementById("verifySub");
+        const modalUtr = document.getElementById("modalUtr");
+
+        modalUtr.innerText = utrVal;
+        spinner.style.display = "block";
+        check.style.display = "none";
+        title.innerText = "Verifying with Google Pay...";
+        sub.innerHTML = `Connecting to UPI Gateway for <strong>${utrVal}</strong>...`;
+        overlay.classList.add("active");
+
+        // Step 1: Connecting (after 800ms)
+        setTimeout(() => {
+            title.innerText = "Confirming Transaction...";
+            sub.innerHTML = "Verifying payment amount with Gujarat Vidyapith Canteen account...";
+        }, 800);
+
+        // Step 2: Verification Success & PLAY SOUND! (after 1800ms)
+        setTimeout(() => {
+            spinner.style.display = "none";
+            check.style.display = "block";
+            title.innerText = "Payment Verified!";
+            title.style.color = "#16a34a";
+            sub.innerHTML = "✓ Google Pay transaction verified. Redirecting to receipt...";
+
+            // PLAY GPAY CHIME & SOUNDBOX VOICE ANNOUNCEMENT!
+            playChimeSound();
+            setTimeout(() => {
+                speakAnnouncement("{{ display_amount }}");
+            }, 450);
+
+            // Submit actual form after sound/voice plays (2.2 seconds)
+            setTimeout(() => {
+                document.getElementById("paymentForm").submit();
+            }, 2200);
+        }, 1800);
+
+        return false;
+    }
+</script>
+{% endblock %}
